@@ -1,7 +1,7 @@
 <template>
   
   <v-card class="mx-auto pa-4 mt-4" width="100%" max-width="500" dir="rtl">
-    <v-form v-if="!loginForm" dir="rtl" @submit.prevent="">
+    <!-- <v-form v-if="!loginForm" dir="rtl" @submit.prevent="">
       <div class="text-center mb-4">
         <span style="color: orangered"> ایجاد حساب</span>
       </div>
@@ -35,14 +35,14 @@
       />
       <span :class="warning">تعداد کاراکتر های وارد شده کمتر از 8 میباشد</span>
 
-    </v-form>
+    </v-form> -->
     
     
     
 
 
-
-    <v-form v-else-if="!creatForm" dir="rtl" @submit.prevent="">
+<!--  v-else-if="!creatForm"     Attribute of v-form  -->
+    <v-form dir="rtl" @submit.prevent="">
       <div class="text-center mb-4">
         <span style="color: orangered"> ورود به حساب کاربری </span>
       </div>
@@ -83,16 +83,17 @@
     </v-form>
 
     <v-btn
-    v-on:click="creatForm = false,loginForm=true"
+    v-on:click="creatForm = false,loginForm = true"
     class="botton"
     color="success"
     size="large"
     type="submit"
     variant="elevated"
+    @click="authentication"
     >
       ورود
     </v-btn>
-    <v-btn
+    <!-- <v-btn
       v-on:click="loginForm=false,creatForm = true"
       class="botton"
       color="red"
@@ -101,12 +102,15 @@
       variant="elevated"
     >
     ایجاد 
-    </v-btn>
+    </v-btn> -->
   </v-card>
   
 </template>
 
 <script>
+// import { computed } from 'vue';
+  import { mapState, mapStores } from "pinia";
+  import { useLoginStore } from "@/stores";
 export default {
 data() {
 return {
@@ -114,12 +118,14 @@ return {
   userPassword: '',
   userNameValidFormat: false,
   confirmPassword: '',
-  isEmpty:true,
+  isEmpty: true,
   loginForm: true,
-  creatForm:false,
+  creatForm: false,
 };
 },
 computed: {
+  ...mapStores(useLoginStore),
+      // ...mapState(loginStore, ["token"]),
 userNameValidation() {
   if(this.userName.length >= 8) {
     return "valid"
@@ -141,15 +147,15 @@ userPasswordValidation() {
     return "invalid"
   }
 },
-  confirmPasswordValidation() {
-  if(this.confirmPassword.length >= 8 && this.confirmPassword == this.userPassword) {
-    return "valid"
-  } else if(this.confirmPassword.length == 0) {
-    return "start"
-  } else {
-    return "invalid"
-  }
-},
+//   confirmPasswordValidation() {
+//   if(this.confirmPassword.length >= 8 && this.confirmPassword == this.userPassword) {
+//     return "valid"
+//   } else if(this.confirmPassword.length == 0) {
+//     return "start"
+//   } else {
+//     return "invalid"
+//   }
+// },
 warning() {
   if(this.userPasswordValidation == "invalid") {
     return "ok"
@@ -158,7 +164,23 @@ warning() {
   }
 }
 },
+mounted() {
+      this.authentication()
+    },
+methods:{
+  authentication() {
+    console.log("Eetnene")
+    if(this.userName.length > 0 && this.psssword.length > 0) {
+      console.log("Eetnene2")
+      //If the backend response is 200
+      const token = "tokenLogin-localStorage"
+      this.loginStore.login(token)
+      console.log("**********",this.loginStore.isAuthenticated);
+    }
+  }
 }
+}
+
 </script>
 <style>
 .valid {
@@ -175,6 +197,6 @@ visibility: visible;
 color: red;
 }
 .botton {
-width: 50%;
+width: 100%;
 }
 </style>

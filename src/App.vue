@@ -1,7 +1,7 @@
 <script setup>
 import { RouterLink, RouterView } from 'vue-router'
 import DefaultLayout from './layouts/DefaultLayout.vue'
-import HomeView from './views/HomeView.vue';
+import HomeViewVue from './views/HomeView.vue'
 // import { ref, onMounted } from 'vue'
 // import { loginStore } from '@/stores/index'
 </script>
